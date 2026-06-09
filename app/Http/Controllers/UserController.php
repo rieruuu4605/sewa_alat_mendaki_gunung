@@ -11,10 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
-class userController extends Controller
+class UserController extends Controller
 {
-   
-
     public function register(Request $request)
     {
         $user = User::create([
@@ -47,52 +45,46 @@ class userController extends Controller
         return back()->with('message', 'Username atau Password salah, tolong cek kembali....');
     }
 
-   public function logout(Request $request)
+    public function logout(Request $request)
     {
-       
         auth()->logout();
         
-    
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-  
         return redirect('/login')->with('success', 'Anda telah berhasil logout!'); 
     }
 
-   
     public function info_user()
     {
         return view('infouser');
     }
 
     public function create(Request $request)
-{
-    $profile = $request->file('image');
-    if ($profile) {
-        $profile->storeAs('public/images', $profile->hashName());
+    {
+        $profile = $request->file('image');
+        if ($profile) {
+            $profile->storeAs('public/images', $profile->hashName());
+        }
+
+        User::where('id', '=', auth()->user()->id)->update([
+            'firstname' => $request->firstname,
+            'lastname'  => $request->lastname
+        ]);
+
+        customer::updateOrCreate(
+            ['iduser' => auth()->user()->id],
+            [
+                'alamat'       => $request->address,
+                'telepon'      => $request->phone,
+                'kodepos'      => $request->postal_code,
+                'jeniskelamin' => $request->gender,
+                'image'        => $profile ? $profile->hashName() : auth()->user()->customer->image ?? "",
+            ]
+        );
+
+        return redirect('/user'); 
     }
-
-   
-    User::where('id', '=', auth()->user()->id)->update([
-        'firstname' => $request->firstname,
-        'lastname'  => $request->lastname
-    ]);
-
-
-    customer::updateOrCreate(
-        ['iduser' => auth()->user()->id],
-        [
-            'alamat'       => $request->address,
-            'telepon'      => $request->phone,
-            'kodepos'      => $request->postal_code,
-            'jeniskelamin' => $request->gender,
-            'image'        => $profile ? $profile->hashName() : auth()->user()->customer->image ?? "",
-        ]
-    );
-
-    return redirect('/user'); 
-}
 
     public function dashboard_admin()
     {
@@ -102,7 +94,7 @@ class userController extends Controller
         $totalProduct     = product::count();
 
         return view('adminpage', [
-            'user'           => $customer,
+            'user'             => $customer,
             'totalCustomer'    => $totalCustomer,
             'totalProduct'     => $totalProduct,
             'totalTransaction' => $totalTransaction
@@ -144,10 +136,10 @@ class userController extends Controller
             'totalTransaction' => $totalTransaction
         ]);
     }
-    public function kirim_pesan(Request $request)
 
+    public function kirim_pesan(Request $request)
+    {
         \App\Models\Contact::create([
-            // Nama dan email diambil otomatis dari akun yang sedang login
             'name'    => Auth::user()->firstname . ' ' . Auth::user()->lastname, 
             'email'   => Auth::user()->email, 
             'message' => $request->message
@@ -166,7 +158,6 @@ class userController extends Controller
 
         $user = User::find(Auth::user()->id);
 
-
         if (Hash::check($request->current_password, $user->password)) {
             $user->update([
                 'password' => Hash::make($request->new_password)
@@ -184,7 +175,6 @@ class userController extends Controller
 
     public function proses_lupa_password(Request $request)
     {
-        // Mencari user yang Email DAN Nomor Teleponnya cocok (Sebagai keamanan ganti OTP Email)
         $user = User::where('email', $request->email)
                     ->where('phonenumber', $request->phonenumber)
                     ->first();
@@ -199,4 +189,3 @@ class userController extends Controller
         }
     }
 }
-
