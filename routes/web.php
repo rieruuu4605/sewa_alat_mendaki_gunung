@@ -52,3 +52,42 @@
 
         // Validasi
         Route::get('/validasi', function () { return view('validasipage'); });
+// Route untuk Edit
+    // Route untuk Edit (Menampilkan halaman form)
+    Route::get('/produk/edit/{id}', [App\Http\Controllers\ProductController::class, 'edit']);
+
+    // Route untuk Update (Proses simpan perubahan)
+    Route::put('/produk/update/{id}', [App\Http\Controllers\ProductController::class, 'update']);
+
+    // Route untuk Hapus
+    Route::delete('/produk/delete/{id}', [App\Http\Controllers\ProductController::class, 'destroy']);
+    });
+    
+   Route::get('/adminpesan', function () {
+    // Mengambil semua data dari tabel contacts, diurutkan dari yang paling baru (descending)
+    $messages = \App\Models\Contact::orderBy('created_at', 'desc')->get();
+    
+    return view('adminpesan', compact('messages'));
+    });
+
+    Route::delete('/pesan/delete/{id}', function ($id) {
+    $pesan = \App\Models\Contact::find($id);
+    if($pesan){
+        $pesan->delete();
+    }
+    return back();
+    });
+
+    // Tambahkan ini di luar middleware auth
+    Route::get('/perlu-login', function () {
+        return view('please-login'); // Buat file please-login.blade.php
+    });
+
+    Route::post('/kirim-pesan', [\App\Http\Controllers\userController::class, 'kirim_pesan']);
+
+    // Route untuk Ganti Password di Profil
+    Route::post('/update-password', [\App\Http\Controllers\userController::class, 'update_password']);
+
+    // Route untuk fitur Lupa Password
+    Route::get('/forgot-password', [\App\Http\Controllers\userController::class, 'lupa_password_page']);
+    Route::post('/forgot-password', [\App\Http\Controllers\userController::class, 'proses_lupa_password']);
