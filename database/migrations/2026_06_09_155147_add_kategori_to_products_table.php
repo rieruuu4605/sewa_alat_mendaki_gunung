@@ -9,18 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
-{
-    Schema::table('users', function (Blueprint $table) {
-        $table->string('phonenumber')->nullable()->change();
-    });
-}
+    public function up(): void
+    {
+        Schema::table('products', function (Blueprint $table) {
+            //
+        });
+    }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        //
+        Schema::table('products', function (Blueprint $table) {
+            //
+        });
     }
 };
