@@ -242,7 +242,7 @@
                             <div class="card product-card">
                                 <img src="{{asset ('images/product3.png')}}" class="card-img-top" alt="Camping Tent">
                                 <div class="card-body">
-                                    <h5 class="card-title">Camping Tent</h5>
+                                    <h5 class="card-c:\KULIAH\omount\omount\database\seederstitle">Camping Tent</h5>
                                     <p class="card-text">Pengaturan mudah, tahan air dan luas.</p>
                                     <p class="text-success">Rp. 1.000.000,-</p>
                                     @auth
