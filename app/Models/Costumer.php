@@ -9,7 +9,7 @@ class customer extends Model
 {
     use HasFactory;
 
-    protected $fillable =[
+    protected $fillable = [
         'iduser',
         'alamat',
         'telepon',
@@ -18,8 +18,9 @@ class customer extends Model
         'image'
     ];
 
+    // INI YANG HARUS DIPERBAIKI (Tambahkan 'iduser' dan 'id')
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'iduser', 'id');
     }
 }
