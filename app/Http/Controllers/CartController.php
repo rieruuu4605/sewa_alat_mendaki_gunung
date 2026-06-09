@@ -7,49 +7,41 @@ use App\Models\Cart;
 
 class CartController extends Controller
 {
-    //
-    public function beli(Request $request,$id)
+   
+    public function beli(Request $request, $id)
     {
-        $cart = Cart::where('idproduct','=',$id)->first();
+   
+        $cekCart = Cart::where('iduser', auth()->user()->id)
+                       ->where('idproduct', $id)
+                       ->first();
 
-        if($cart){
-            $cart->delete();
+        if (!$cekCart) {
+            Cart::create([
+                'iduser'    => auth()->user()->id,
+                'idproduct' => $id
+            ]);
         }
 
-        Cart::create([
-            'iduser'=> auth()->user()->id,
-            'idproduct'=>$id
-        ]);
-        echo "<script>alert('Berhasil ditambahkan ke keranjang')</script>";
-        return redirect('/homepage');
+        return redirect()->back()->with('success', 'Berhasil ditambahkan ke keranjang!');
     }
 
-    public function beli_sekarang(Request $request,$id)
+    public function beli_sekarang(Request $request, $id)
     {
-        $cart = Cart::where('idproduct','=',$id)->first();
 
-        if($cart){
-            $cart->delete();
-        }
+        Cart::where('iduser', auth()->user()->id)->delete();
 
         Cart::create([
-            'iduser'=> auth()->user()->id,
-            'idproduct'=>$id
+            'iduser'    => auth()->user()->id,
+            'idproduct' => $id
         ]);
-        
-        return redirect('/checkout');
+
+        return redirect('/transaksi');
     }
 
     public function checkout_page(Request $request)
     {
-        $cart = Cart::where('iduser','=',auth()->user()->id)->first();
+        $carts = Cart::where('iduser', auth()->user()->id)->get();
 
-        if($cart){
-
-            return view('transaksi',['cart'=>$cart]);
-        }else{
-            return view('transaksi',['cart'=>null]);
-        }
-
+        return view('transaksi', ['carts' => $carts]);
     }
 }
