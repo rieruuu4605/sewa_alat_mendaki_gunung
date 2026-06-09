@@ -1,87 +1,54 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\userController;
+    use Illuminate\Support\Facades\Route;
+    use App\Http\Controllers\userController;
+    use App\Http\Controllers\ProductController;
+    use App\Http\Controllers\CartController;
+    use App\Http\Controllers\OrderController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | Web Routes (Sudah Terproteksi)
+    |--------------------------------------------------------------------------
+    */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+    // 1. Route Publik (Bisa diakses tanpa login)
+    Route::get('/', function () { return view('welcome'); });
+    Route::get('/homepage', [ProductController::class, 'index']);
+    Route::get('/about', function () { return view('about'); });
+    Route::get('/contact', function () { return view('contact'); });
 
-Route::get('/login', function () {
-    return view('login');
-});
+    // Route Login & Register
+    Route::get('/login', function () { return view('login'); })->name('login'); // name('login') wajib ada
+    Route::get('/register', function () { return view('register'); });
+    Route::post('/login', [userController::class, 'login']);
+    Route::post('/register', [userController::class, 'register']);
 
-Route::get('/register', function () {
-    return view('register');
-});
+    // 2. Route Private (Wajib Login)
+    Route::middleware(['auth'])->group(function () {
+        
+        // Transaksi & Keranjang
+        Route::get('/transaksi', [CartController::class, 'checkout_page']);
+        Route::post('/buat-pesanan', [OrderController::class, 'buat_pesanan']);
+        Route::post('/beli/{id}', [CartController::class, 'beli']);
+        Route::post('/checkout/{id}', [CartController::class, 'beli_sekarang']);
+        
+        // User Panel
+        Route::get('/userdashboard', [OrderController::class, 'transaksi_user']);
+        Route::get('/profile', function () { return view('profile'); });
+        Route::get('/user', function () { return view('infouser'); });
+        Route::post('/submit-profile', [userController::class, 'create'])->name('user.create');
+        
+        // Admin Panel
+        Route::get('/admin', [userController::class, 'dashboard_admin']);
+        Route::get('/infotransaksi', [userController::class, 'info_transaksi']);
+        Route::get('/produkbaru', function () { return view('produkbaru'); });
+        Route::post('/submit-produkbaru', [ProductController::class, 'store']);
+        Route::get('/adminproduct', [userController::class, 'dashboard_product']);
+        Route::delete('/delete-user/{id}', [userController::class, 'delete_user']);
+        
+        // Logout (Wajib di dalam auth)
+        Route::post('/logout', [userController::class, 'logout']);
 
-Route::get('/homepage', [App\Http\Controllers\ProductController::class,'index']);
-
-Route::get('/transaksi', [App\Http\Controllers\CartController::class,'checkout_page']);
-
-Route::post('/buat-pesanan/{id}', [App\Http\Controllers\OrderController::class,'buat_pesanan']);
-
-Route::get('/validasi', function () {
-    return view('validasipage');
-});
-
-Route::get('/userdashboard',[App\Http\Controllers\OrderController::class,'transaksi_user']);
-
-Route::get('/profile', function () {
-    return view('profile');
-});
-
-Route::get('/user', function () {
-    return view('infouser');
-});
-
-Route::post('/beli/{id}',[App\Http\Controllers\CartController::class,'beli']);
-
-Route::post('/checkout/{id}',[App\Http\Controllers\CartController::class,'beli_sekarang']);
-
-
-//Route untuk ke halaman dashboard admin
-Route::get('/admin', [App\Http\Controllers\userController::class, 'dashboard_admin']);
-
-Route::get('/infotransaksi', [App\Http\Controllers\userController::class,'info_transaksi']);
-
-Route::get('/produkbaru', function () {
-    return view('produkbaru');
-});
-
-//Route untuk menambahkan produk baru
-Route::post('/submit-produkbaru',[App\Http\Controllers\ProductController::class,'store']);
-
-Route::post('/logout',[App\Http\Controllers\userController::class,'logout']);
-
-Route::post('/login',[App\Http\Controllers\userController::class,'login']);
-
-Route::post('/register',[App\Http\Controllers\userController::class,'register']);
-
-//Route untuk memasukkan data user
-Route::post('/submit-profile', [App\Http\Controllers\userController::class,'create'])->name('user.create');
-
-//Route untuk ke halaman admin product
-Route::get('/adminproduct', [App\Http\Controllers\userController::class, 'dashboard_product']);
-
-//Route untuk menghapus user
-Route::delete('/delete-user/{id}', [App\Http\Controllers\userController::class, 'delete_user']);
-
-Route::get('/about', function () {
-    return view('about');
-});
-
-Route::get('/contact', function () {
-    return view('contact');
-});
+        // Validasi
+        Route::get('/validasi', function () { return view('validasipage'); });
