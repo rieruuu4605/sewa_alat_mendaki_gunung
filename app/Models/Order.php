@@ -13,8 +13,12 @@ class Order extends Model
         'idproduct',
         'iduser',
         'metode_pembayaran',
-        'total_pembayaran'
+        'total_pembayaran',
+        'jenis_transaksi',
+        'lama_sewa'
     ];
+
+    
 
     public function user()
     {
