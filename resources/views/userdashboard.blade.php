@@ -29,10 +29,7 @@
             padding: 10px 20px;
             font-size: 16px;
         }
-        .sidebar a:hover {
-            background-color: #1e4e8c;
-        }
-        .sidebar .active {
+        .sidebar a:hover, .sidebar .active {
             background-color: #1e4e8c;
             font-weight: bold;
         }
@@ -50,6 +47,8 @@
             margin-top: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
+            background-color: #ffffff;
+            padding: 20px;
         }
         .btn-primary {
             background-color: #2b6cb0;
@@ -65,27 +64,32 @@
 </head>
 <body>
     <div class="sidebar">
-        <a href="userdashboard" class="active"><i class="bi bi-grid"></i> Dashboard</a>
-        <a href="/profile"><i class="bi bi-person"></i> Profile</a>
-        <a href="/homepage"><i class="bi bi-arrow-left"></i> Back</a>
+        <a href="/userdashboard" class="active"><i class="bi bi-grid"></i> Dashboard</a>
+        <a href="/user"><i class="bi bi-person"></i> Profil Saya</a> 
+        <a href="/homepage"><i class="bi bi-arrow-left"></i> Kembali</a>
     </div>
 
     <div class="content">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>EXVENTURE</h2>
-            <button class="btn btn-danger"><i class="bi bi-box-arrow-right"></i> Logout</button>
+            <h2>OMOUNT ADVENTURE</h2>
+            <form action="/logout" method="POST" style="display: inline; margin: 0;">
+                @csrf
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </form>
         </div>
         
         <h4>Hi {{auth()->user()->firstname}}!</h4>
-        <div class="card-summary mb-4">
+        <div class="card-summary mb-4 mt-3">
             <h6>Total Pesanan</h6>
             <h2>{{ $totalTransaction }}</h2>
         </div>
         
         <div class="table-responsive">
             <h5>Histori Transaksi</h5>
-            <table class="table table-striped">
-                <thead>
+            <table class="table table-striped mt-3">
+                <thead class="table-dark">
                     <tr>
                         <th>Nomor Order</th>
                         <th>Nama</th>
@@ -102,13 +106,17 @@
                         <td>{{ $item->user->firstname }}</td>
                         <td>{{ $item->product->namaproduct }}</td>
                         <td>{{ $item->created_at }}</td>
-                        <td>Paid</td>
+                        <td><span class="badge bg-success">Paid</span></td>
                         <td>
                             <button class="btn btn-primary btn-sm"><i class="bi bi-printer"></i> Cetak</button>
                         </td>
                     </tr>
-                        
                     @endforeach
+                    @if($data->count() == 0)
+                    <tr>
+                        <td colspan="6" class="text-center py-3">Belum ada histori transaksi.</td>
+                    </tr>
+                    @endif
                 </tbody>
             </table>
             <div class="text-center mt-3">
