@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - EXVENTURE</title>
+    <title>Login - OMOUNT ADVENTURE</title>
     <link rel="icon" href="{{asset ('images/logo.png')}}" type="image/gif" height="30px">
     <style>
         body {
@@ -43,7 +43,7 @@
         .form-section p {
             font-size: 14px;
             color: #555;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .form-section input[type="email"],
@@ -54,6 +54,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 14px;
+            box-sizing: border-box; /* Memastikan padding tidak membuat input melebihi wadah */
         }
 
         .form-section .options {
@@ -90,11 +91,15 @@
 
         .form-section .sign-up-btn {
             display: inline-block;
+            text-align: center;
             text-decoration: none;
-            padding: 10px 155px;
+            padding: 12px;
             margin-top: 10px;
             background-color: #eeeeee;
             color: #555;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .form-section .sign-up-btn:hover {
@@ -121,6 +126,7 @@
 
         .image-section img {
             max-width: 100%;
+            z-index: 1; /* Agar gambar berada di atas lingkaran hijau */
         }
 
         .logo {
@@ -138,18 +144,40 @@
             font-size: 22px;
             color: #1b1b1b;
         }
+
+        /* Notifikasi Alert Sederhana */
+        .alert {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            text-align: center;
+        }
+        .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-danger { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Form Section -->
         <div class="form-section">
             <div class="logo">
                 <img src="{{asset ('images/logo.png')}}" alt="Logo">
-                <h2>EXVENTURE</h2>
+                <h2>OMOUNT ADVENTURE</h2>
             </div>
             <h1>Welcome Back!</h1>
             <p>Stay Ahead! Login to your account.</p>
+
+            @if(session('message'))
+                <div class="alert alert-success">
+                    {{ session('message') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <form action="/login" method="POST">
                 @csrf
                 @method('POST')
@@ -159,14 +187,13 @@
                     <label>
                         <input type="checkbox"> Remember Me
                     </label>
-                    <a href="#" style="color: #007bff; text-decoration: none;">Forgot Password?</a>
+                    <a href="/forgot-password" style="color: #007bff; text-decoration: none;">Forgot Password?</a>
                 </div>
                 <button type="submit">Login</button>
                 <a href="/register" class="sign-up-btn">Sign Up</a>
             </form>
         </div>
 
-        <!-- Image Section -->
         <div class="image-section">
             <div class="circle"></div>
             <img src="{{asset ('images/maincontent.png')}}" alt="Mountain Sunset">
