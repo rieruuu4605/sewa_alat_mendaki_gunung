@@ -1,1 +1,176 @@
-# nachagalatama
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EXVENTURE</title>
+    <link rel="icon" href="{{asset ('images/logo.png')}}" type="image/gif" height="30px">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .form-section {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-section h1 {
+            font-size: 26px;
+            color: #1b5e20;
+            margin-bottom: 8px;
+        }
+
+        .form-section p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .form-section input[type="email"],
+        .form-section input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-section .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .form-section .options label {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section .options input {
+            margin-right: 5px;
+        }
+
+        .form-section button {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            color: white;
+            background-color: #1b5e20;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-section button:hover {
+            background-color: #145a1f;
+        }
+
+        .form-section .sign-up-btn {
+            display: inline-block;
+            text-decoration: none;
+            padding: 10px 155px;
+            margin-top: 10px;
+            background-color: #eeeeee;
+            color: #555;
+        }
+
+        .form-section .sign-up-btn:hover {
+            background-color: #ddd;
+        }
+
+        .image-section {
+            background-color: #f3f4f6;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-section .circle {
+            width: 200px;
+            height: 200px;
+            background-color: #1b5e20;
+            border-radius: 50%;
+            position: absolute;
+            right: -50px;
+            top: -50px;
+        }
+
+        .image-section img {
+            max-width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 80px;
+            margin-right: -10px;
+        }
+
+        .logo h2 {
+            font-size: 22px;
+            color: #1b1b1b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Form Section -->
+        <div class="form-section">
+            <div class="logo">
+                <img src="{{asset ('images/logo.png')}}" alt="Logo">
+                <h2>EXVENTURE</h2>
+            </div>
+            <h1>Welcome Back!</h1>
+            <p>Stay Ahead! Login to your account.</p>
+            <form action="/login" method="POST">
+                @csrf
+                @method('POST')
+                <input type="email" name="email" placeholder="Email Address" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <div class="options">
+                    <label>
+                        <input type="checkbox"> Remember Me
+                    </label>
+                    <a href="#" style="color: #007bff; text-decoration: none;">Forgot Password?</a>
+                </div>
+                <button type="submit">Login</button>
+                <a href="/register" class="sign-up-btn">Sign Up</a>
+            </form>
+        </div>
+
+        <!-- Image Section -->
+        <div class="image-section">
+            <div class="circle"></div>
+            <img src="{{asset ('images/maincontent.png')}}" alt="Mountain Sunset">
+        </div>
+    </div>
+</body>
+</html>
