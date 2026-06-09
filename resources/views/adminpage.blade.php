@@ -8,58 +8,44 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="{{asset ('images/logo.png')}}" type="image/gif" height="30px">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
-        }
-        .sidebar {
-            background-color: #343a40;
-            min-height: 100vh;
-            padding: 15px;
-        }
-        .sidebar a {
-            color: #fff;
-            text-decoration: none;
-            display: block;
-            padding: 10px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-        }
-        .sidebar a:hover, .sidebar a.active {
-            background-color: #495057;
-        }
-        .card {
-            border: none;
-            border-radius: 10px;
-        }
-        .card i {
-            font-size: 24px;
-        }
+        body { font-family: 'Arial', sans-serif; background-color: #f4f4f9; }
+        .sidebar { background-color: #343a40; min-height: 100vh; padding: 15px; }
+        .sidebar a { color: #fff; text-decoration: none; display: block; padding: 10px; margin-bottom: 5px; border-radius: 5px; }
+        .sidebar a:hover, .sidebar a.active { background-color: #495057; }
+        .card { border: none; border-radius: 10px; }
+        .card i { font-size: 24px; }
     </style>
 </head>
 <body>
 <div class="container-fluid">
     <div class="row">
-        <!-- Sidebar -->
         <div class="col-md-2 sidebar">
             <h4 class="text-white mb-4">Admin Panel</h4>
             <a href="/admin" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
             <a href="/adminproduct"><i class="fas fa-box"></i> Produk</a>
             <a href="/infotransaksi"><i class="fas fa-receipt"></i> Transaksi</a>
+            <a href="/adminpesan"><i class="fas fa-envelope"></i> Pesan Masuk</a>
+            
+            <div style="margin-top: 20px;">
+                <form action="/logout" method="POST">
+                    @csrf
+                    <button type="submit" style="background-color: #dc3545; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; text-align: left;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
+            </div>
         </div>
 
-        <!-- Content -->
         <div class="col-md-10">
             <div class="py-4 px-4">
                 <h2 class="mb-4">Dashboard</h2>
 
-                <!-- Statistic Cards -->
                 <div class="row">
                     <div class="col-md-3">
                         <div class="card text-white bg-warning mb-3">
                             <div class="card-body">
                                 <h5 class="card-title">Jumlah Produk</h5>
-                                <p class="card-text fs-4">{{ $totalProduct }}</p>
+                                <p class="card-text fs-4">{{ $totalProduct }} Produk</p>
                                 <i class="fas fa-box"></i>
                             </div>
                         </div>
@@ -82,40 +68,48 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-primary mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Pendapatan</h5>
+                                <p class="card-text fs-5">Rp{{ number_format(\App\Models\Order::sum('total_pembayaran'), 0, ',', '.') }}</p>
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Customer Information Table -->
                 <h3 class="mt-4">Informasi Customer</h3>
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered">
+                    <table class="table table-striped table-bordered align-middle">
                         <thead class="table-dark">
                         <tr>
-                            <th>#</th>
+                            <th>ID User</th>
                             <th>Nama</th>
                             <th>Email</th>
                             <th>No. Telepon</th>
+                            <th>Alamat</th>
+                            <th>Kode Pos</th>
                             <th>Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $no =0;
-                            @endphp
                             @foreach ($user as $person)
                             <tr>
-                                <td>{{ $no+=1; }}</td>
-                                <td>{{ $person->firstname }}{{ $person->lastname }}</td>
+                                <td><strong>{{ $person->id }}</strong></td>
+                                <td>{{ $person->firstname }} {{ $person->lastname }}</td>
                                 <td>{{ $person->email }}</td>
-                                <td>{{ $person->customer->telepon }}</td>
+                                <td>{{ $person->customer?->telepon ?? '-' }}</td>
+                                <td>{{ $person->customer?->alamat ?? 'Belum diisi' }}</td>
+                                <td>{{ $person->customer?->kodepos ?? '-' }}</td>
                                 <td>
                                     <form action="/delete-user/{{ $person->id }}" method="post">
                                         @csrf
                                         @method('DELETE')
-                                        <button onclick="return confirm('Apakah anda yakin akan menghapus?')" type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        <button onclick="return confirm('Apakah anda yakin akan menghapus user ini?')" type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                     </form>
                                 </td>
                             </tr>
-                                
                             @endforeach
                         </tbody>
                     </table>
