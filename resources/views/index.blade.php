@@ -22,7 +22,7 @@
         
         .header-image {
             height: 450px;
-            background-image: url('{{asset("images/bghpg.png")}}');
+            background-image: url('{{asset("images/bghp g.png")}}');
             background-size: cover; background-repeat: no-repeat; background-position: center;
         }
         .filter-section { background-color: #f9f9f9; padding: 20px; border-right: 1px solid #ddd; }
