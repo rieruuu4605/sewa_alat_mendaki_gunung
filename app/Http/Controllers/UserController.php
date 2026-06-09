@@ -13,133 +13,190 @@ use Illuminate\Support\Facades\Auth;
 
 class userController extends Controller
 {
-    public function register (Request $request)
+   
+
+    public function register(Request $request)
     {
         $user = User::create([
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'email' => $request->email,
+            'firstname'   => $request->firstname,
+            'lastname'    => $request->lastname,
+            'email'       => $request->email,
             'phonenumber' => $request->phonenumber,
-            'password' => $request->password,
-            'role' => "customer"
+            'password'    => Hash::make($request->password),
+            'role'        => "customer"
         ]);
 
         customer::create([
             'iduser' => $user->id
         ]);
 
-        return redirect ('/login');
+        return redirect('/login');
     }
-    public function login (Request $request)
+
+    public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-
-        // Query untuk mendapatkan user berdasarkan username
-        $user = DB::table('users')
-            ->where('email', $credentials['email'])
-            ->first();
-
-        // Jika user ditemukan dan password sesuai
-        if ($user && Hash::check($credentials['password'], $user->password)) {
-            // Set session untuk username, status, dan nama lengkap
-            $request->session()->put([
-                'email' => $user->email,
-            ]);
-
-            Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
-            //Auth::login($user);
-
-            // Menampilkan alert login berhasil dengan nama lengkap diambil dari session
-            echo "<script>alert('Login Berhasil, Selamat datang, " . $user->email."')</script>";
-            if(auth()->user()->role === 'admin'){
-                echo "<script>window.location = 'admin';</script>";
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            if ($user->role === 'admin') {
+                return redirect('/admin')->with('message', 'Selamat datang Admin!');
+            } else {
+                return redirect('/homepage')->with('message', 'Selamat datang!');
             }
-            // Redirect ke halaman selamat datang setelah alert ditampilkan
-            echo "<script>window.location = 'homepage';</script>";
-        } else {
-            // Jika login gagal, kembalikan ke halaman login dengan pesan error
-            session()->flash('message', 'Username atau Password salah, tolong cek kembali....');
-            return redirect('/login');
         }
+        return back()->with('message', 'Username atau Password salah, tolong cek kembali....');
     }
 
-    public function logout(Request $request){
-        Auth::logout();
-        return redirect('/homepage');
-    }
-    public function create(Request $request){
+   public function logout(Request $request)
+    {
+       
+        auth()->logout();
+        
+    
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        $profile = $request->file('image');
-        if($profile){
-            $profile->storeAs('public/images', $profile->hashName());
-        }
-        User::where('id','=',auth()->user()->id)->update([
-            'firstname' => $request->name
-        ]);
-
-        customer::create([
-            "iduser" =>auth()->user()->id,
-            "alamat" =>$request->address,
-            "telepon"=>$request->phone,
-            "kodepos" =>$request->postal_code,
-            "jeniskelamin" => $request->gender,
-            'image' => $profile ? $profile->hashName() : "",
-        ]);
-
-
-        return redirect('/user');
+  
+        return redirect('/login')->with('success', 'Anda telah berhasil logout!'); 
     }
 
-    //function untuk ke halaman dashboard admin
+   
+    public function info_user()
+    {
+        return view('infouser');
+    }
+
+    public function create(Request $request)
+{
+    $profile = $request->file('image');
+    if ($profile) {
+        $profile->storeAs('public/images', $profile->hashName());
+    }
+
+   
+    User::where('id', '=', auth()->user()->id)->update([
+        'firstname' => $request->firstname,
+        'lastname'  => $request->lastname
+    ]);
+
+
+    customer::updateOrCreate(
+        ['iduser' => auth()->user()->id],
+        [
+            'alamat'       => $request->address,
+            'telepon'      => $request->phone,
+            'kodepos'      => $request->postal_code,
+            'jeniskelamin' => $request->gender,
+            'image'        => $profile ? $profile->hashName() : auth()->user()->customer->image ?? "",
+        ]
+    );
+
+    return redirect('/user'); 
+}
+
     public function dashboard_admin()
     {
-        //mengambil data user selain admin
-        $customer = User::where('role','!=','admin')->get();
-        
-        $totalCustomer = User::where('role','!=','admin')->count();
-        
+        $customer         = User::where('role', '!=', 'admin')->get();
+        $totalCustomer    = User::where('role', '!=', 'admin')->count();
         $totalTransaction = Order::count();
-        $totalProduct = product::count();
+        $totalProduct     = product::count();
 
-        return view('adminpage',['user'=>$customer,'totalCustomer'=>$totalCustomer,'totalProduct'=>$totalProduct,'totalTransaction'=>$totalTransaction]);
+        return view('adminpage', [
+            'user'           => $customer,
+            'totalCustomer'    => $totalCustomer,
+            'totalProduct'     => $totalProduct,
+            'totalTransaction' => $totalTransaction
+        ]);
     }
 
-    //Route untuk ke halaman dashboard product
     public function dashboard_product()
     {
-        //mengambil data product 
-        $products = product::all();
-        
-        $totalCustomer = User::where('role','!=','admin')->count();
-        
-        $totalProduct = product::count();
-
+        $products         = product::all();
+        $totalCustomer    = User::where('role', '!=', 'admin')->count();
+        $totalProduct     = product::count();
         $totalTransaction = Order::count();
 
-        return view('adminproduct',['products'=>$products,'totalCustomer'=>$totalCustomer,'totalProduct'=>$totalProduct,'totalTransaction'=>$totalTransaction]);
+        return view('adminproduct', [
+            'products'         => $products,
+            'totalCustomer'    => $totalCustomer,
+            'totalProduct'     => $totalProduct,
+            'totalTransaction' => $totalTransaction
+        ]);
     }
 
-    //function untuk menghapus user
-    public function delete_user(Request $request,$id)
+    public function delete_user(Request $request, $id)
     {
-        $user = User::where('id','=',$id)->delete();
-
+        User::where('id', '=', $id)->delete();
         return redirect('/admin');
     }
 
-    //function untuk ke halaman admin info transaksi
     public function info_transaksi()
     {
-        //mengambil data product 
-        $order = Order::all();
-        
-        $totalCustomer = User::where('role','!=','admin')->count();
-        
-        $totalProduct = product::count();
-
+        $order            = Order::all();
+        $totalCustomer    = User::where('role', '!=', 'admin')->count();
+        $totalProduct     = product::count();
         $totalTransaction = Order::count();
 
-        return view('infotransaksi',['orders'=>$order,'totalCustomer'=>$totalCustomer,'totalProduct'=>$totalProduct,'totalTransaction'=>$totalTransaction]);
+        return view('infotransaksi', [
+            'orders'           => $order,
+            'totalCustomer'    => $totalCustomer,
+            'totalProduct'     => $totalProduct,
+            'totalTransaction' => $totalTransaction
+        ]);
+    }
+    public function kirim_pesan(Request $request)
+
+        \App\Models\Contact::create([
+            // Nama dan email diambil otomatis dari akun yang sedang login
+            'name'    => Auth::user()->firstname . ' ' . Auth::user()->lastname, 
+            'email'   => Auth::user()->email, 
+            'message' => $request->message
+        ]);
+
+        return redirect()->back()->with('success', 'Pesan kamu berhasil dikirim ke Admin!');
+    }
+
+    public function update_password(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:6',
+            'confirm_password' => 'required|same:new_password'
+        ]);
+
+        $user = User::find(Auth::user()->id);
+
+
+        if (Hash::check($request->current_password, $user->password)) {
+            $user->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+            return redirect()->back()->with('success', 'Password berhasil diperbarui!');
+        } else {
+            return redirect()->back()->with('error', 'Password lama salah!');
+        }
+    }
+
+    public function lupa_password_page()
+    {
+        return view('forgotpassword');
+    }
+
+    public function proses_lupa_password(Request $request)
+    {
+        // Mencari user yang Email DAN Nomor Teleponnya cocok (Sebagai keamanan ganti OTP Email)
+        $user = User::where('email', $request->email)
+                    ->where('phonenumber', $request->phonenumber)
+                    ->first();
+
+        if ($user) {
+            $user->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+            return redirect('/login')->with('message', 'Password berhasil direset! Silakan login dengan password baru.');
+        } else {
+            return redirect()->back()->with('error', 'Data tidak ditemukan! Pastikan Email dan Nomor Telepon cocok.');
+        }
     }
 }
 
