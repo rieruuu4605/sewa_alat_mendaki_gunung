@@ -17,8 +17,10 @@ return new class extends Migration
             $table->foreignId('iduser')->references('id')->on('users')->onDelete('cascade');
             $table->string('metode_pembayaran');
             $table->integer('total_pembayaran');
+            $table->integer('lama_sewa');
+            $table->string('jenis_transaksi');
             $table->timestamps();
-        });
+            });
     }
 
     /**
