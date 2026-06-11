@@ -32,20 +32,21 @@ class ProductController extends Controller
         return view('index', ['products' => $product]);
     }
 
-    public function store(Request $request)
+   public function store(Request $request)
     {
-        $gambar = $request->file('image');
-        if ($gambar) {
-            $gambar->storeAs('public/images', $gambar->hashName());
-        }
+        // Mengamankan gambar
+        $file = $request->file('image');
+        $nama_file = time() . "_" . $file->getClientOriginalName();
+        $file->storeAs('public/images', $nama_file);
 
-        product::create([
+        // Menyimpan data ke database
+        Product::create([
             'namaproduct' => $request->name,
-            'gambar'      => $gambar ? $gambar->hashName() : null,
+            'kategori'    => $request->kategori, // Tambahan baru
+            'gambar'      => $nama_file,
             'deskripsi'   => $request->description,
             'harga'       => $request->price,
-            'stok'        => $request->stok,
-            'kategori'    => $request->kategori,
+            'stok'        => $request->stok      // Tambahan baru
         ]);
 
         return redirect('/adminproduct');

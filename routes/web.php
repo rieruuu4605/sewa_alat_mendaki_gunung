@@ -64,8 +64,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/infotransaksi', [UserController::class, 'info_transaksi']);
     Route::post('/delete-user/{id}', [UserController::class, 'delete_user']);
     
-    // CRUD Produk
+   // CRUD Produk
+    Route::get('/produkbaru', function () { return view('produkbaru'); });
     Route::post('/produk/store', [ProductController::class, 'store']);
+    
     Route::get('/produk/edit/{id}', [ProductController::class, 'edit']);
     Route::put('/produk/update/{id}', [ProductController::class, 'update']);
     Route::delete('/produk/delete/{id}', [ProductController::class, 'destroy']);

@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class product extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'namaproduct',
-        'gambar',
-        'deskripsi',
-        'harga',
-        'stok',
-        'kategori' // tambah kolom kategori
+        protected $fillable = [
+        'namaproduct', 
+        'kategori', 
+        'gambar', 
+        'deskripsi', 
+        'harga', 
+        'stok'
     ];
 
     public function cart()
