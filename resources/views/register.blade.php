@@ -9,15 +9,12 @@
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
-            /* TAMBAHAN: Memberi ruang kosong di atas & bawah agar tidak mentok layar */
             padding: 40px 20px; 
             background-color: #f9f9f9;
             display: flex;
             justify-content: center;
             align-items: center;
-            /* PERBAIKAN: Ubah height jadi min-height agar bisa discroll kalau kepanjangan */
             min-height: 100vh; 
-            /* TAMBAHAN: Agar padding tidak merusak ukuran min-height */
             box-sizing: border-box; 
         }
         .container {
@@ -28,7 +25,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             overflow: hidden;
-            margin: auto; /* Membantu posisi tetap di tengah dengan aman */
+            margin: auto; 
         }
         .left-section {
             width: 50%;

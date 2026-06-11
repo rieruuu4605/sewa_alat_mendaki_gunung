@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
                 'email' => 'admin@gmail.com',
                 'password' => Hash::make('password123'),
                 'phonenumber' => '081234567890',
-                'role' => 'admin', // UBAH INI JADI 'admin'
+                'role' => 'admin', 
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
                 'email' => 'user@gmail.com',
                 'password' => Hash::make('password123'),
                 'phonenumber' => '089876543210',
-                'role' => 'customer', // INI SUDAH BENAR
+                'role' => 'customer',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

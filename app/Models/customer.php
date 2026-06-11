@@ -18,7 +18,6 @@ class customer extends Model
         'image'
     ];
 
-    // INI YANG HARUS DIPERBAIKI (Tambahkan 'iduser' dan 'id')
     public function user()
     {
         return $this->belongsTo(User::class, 'iduser', 'id');

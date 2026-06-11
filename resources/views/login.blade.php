@@ -54,7 +54,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 14px;
-            box-sizing: border-box; /* Memastikan padding tidak membuat input melebihi wadah */
+            box-sizing: border-box; 
         }
 
         .form-section .options {
@@ -126,7 +126,7 @@
 
         .image-section img {
             max-width: 100%;
-            z-index: 1; /* Agar gambar berada di atas lingkaran hijau */
+            z-index: 1; 
         }
 
         .logo {
@@ -145,7 +145,7 @@
             color: #1b1b1b;
         }
 
-        /* Notifikasi Alert Sederhana */
+  
         .alert {
             padding: 12px;
             border-radius: 5px;

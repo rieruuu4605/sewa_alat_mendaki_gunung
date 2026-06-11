@@ -14,7 +14,7 @@
         .sidebar a:hover, .sidebar a.active { background-color: #495057; }
         .card { border: none; border-radius: 10px; }
         .card i { font-size: 24px; }
-        .message-box { max-width: 400px; white-space: pre-wrap; } /* Agar teks pesan panjang otomatis turun ke bawah */
+        .message-box { max-width: 400px; white-space: pre-wrap; } 
     </style>
 </head>
 <body>

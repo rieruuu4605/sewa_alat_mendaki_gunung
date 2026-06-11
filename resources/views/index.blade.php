@@ -10,7 +10,7 @@
     <style>
         body { font-family: 'Arial', sans-serif; }
         
-        /* CSS STANDAR NAVBAR */
+       
         .navbar { background-color: #2e7d32; }
         .navbar-brand { font-weight: bold; font-size: 20px; }
         .nav-link.logout-btn {
@@ -37,7 +37,7 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<!-- NAVBAR STANDAR -->
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2" href="#">
