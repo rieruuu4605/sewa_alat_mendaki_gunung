@@ -51,7 +51,11 @@ Route::middleware(['auth'])->group(function () {
     
     // User Info & Update Profile
     Route::get('/user', [UserController::class, 'info_user']);
-    Route::post('/user/create', [UserController::class, 'create']);
+    
+    // Tambahkan dua baris ini untuk halaman Edit Profile
+    Route::get('/profile', function () { return view('profile'); });
+    Route::post('/submit-profile', [UserController::class, 'create']);
+    
     Route::post('/update-password', [UserController::class, 'update_password']);
 
     // Admin Dashboard (Sebaiknya ditambahkan middleware khusus admin nanti)
