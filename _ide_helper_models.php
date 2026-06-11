@@ -77,11 +77,11 @@ namespace App\Models{
  * @property int $id
  * @property string $firstname
  * @property string $lastname
- * @property string|null $phonenumber
  * @property string $email
- * @property \Illuminate\Support\Carbon|null $email_verified_at
+ * @property string $phonenumber
  * @property string $password
  * @property string $role
+ * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
