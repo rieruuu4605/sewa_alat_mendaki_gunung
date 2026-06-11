@@ -27,6 +27,7 @@
         }
         .filter-section { background-color: #f9f9f9; padding: 20px; border-right: 1px solid #ddd; }
         .product-card img { height: 150px; object-fit: contain; border-radius: 20px; margin-top: 10px; }
+        .product-card .card-title { min-height: 48px; }
         .footer { background-color: #2e7d32; color: white; padding: 20px 0; }
         .footer a { color: white; text-decoration: none; }
         .footer a:hover { text-decoration: underline; }

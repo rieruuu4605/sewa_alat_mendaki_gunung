@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Product - Tambah Produk</title>
+    <title>Admin Product</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/gif" height="30px">
+    <link rel="icon" href="{{asset('images/logo.png')}}" type="image/gif" height="30px">
     <style>
         body { font-family: 'Arial', sans-serif; background-color: #f4f4f9; }
         .sidebar { background-color: #343a40; min-height: 100vh; padding: 15px; }
@@ -56,12 +56,11 @@
                             <textarea class="form-control" name="description" rows="3" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Harga (Rp)</label>
+                            <label class="form-label">Harga</label>
                             <input type="number" class="form-control" name="price" required>
                         </div>
-                        <div class="mb-3 mt-3"> 
-                            <label class="form-label">Stok</label>
-                            <input type="number" name="stok" class="form-control" placeholder="Masukkan jumlah stok barang" required>
+                        <div class="mb-3 mt-3"> <label for="stok" class="form-label">Stok</label>
+                            <input type="number" name="stok" class="form-control" id="stok" placeholder="Masukkan jumlah stok barang" required>
                         </div>
                         <div class="d-flex gap-2 mt-4">
                             <button type="submit" class="btn btn-primary">Submit</button>

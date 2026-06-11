@@ -7,7 +7,6 @@ use App\Models\product;
 
 class ProductController extends Controller
 {
-
     public function index(Request $request)
     {
         $query = product::query();
@@ -16,7 +15,6 @@ class ProductController extends Controller
             $query->whereIn('kategori', $request->kategori);
         }
 
-        // Filter berdasarkan harga maksimal
         if ($request->has('harga_max') && !empty($request->harga_max)) {
             $query->where('harga', '<=', $request->harga_max);
         }
@@ -32,21 +30,20 @@ class ProductController extends Controller
         return view('index', ['products' => $product]);
     }
 
-   public function store(Request $request)
+    public function store(Request $request)
     {
-        // Mengamankan gambar
-        $file = $request->file('image');
-        $nama_file = time() . "_" . $file->getClientOriginalName();
-        $file->storeAs('public/images', $nama_file);
+        $gambar = $request->file('image');
+        if ($gambar) {
+            $gambar->storeAs('public/images', $gambar->hashName());
+        }
 
-        // Menyimpan data ke database
-        Product::create([
+        product::create([
             'namaproduct' => $request->name,
-            'kategori'    => $request->kategori, // Tambahan baru
-            'gambar'      => $nama_file,
+            'gambar'      => $gambar ? $gambar->hashName() : null,
             'deskripsi'   => $request->description,
             'harga'       => $request->price,
-            'stok'        => $request->stok      // Tambahan baru
+            'stok'        => $request->stok,
+            'kategori'    => $request->kategori,
         ]);
 
         return redirect('/adminproduct');
@@ -70,7 +67,7 @@ class ProductController extends Controller
 
         $product->update([
             'namaproduct' => $request->name,
-            'deskripsi'   => $request->description ?? $product->deskripsi, // Menggunakan deskripsi lama jika input kosong
+            'deskripsi'   => $request->description ?? $product->deskripsi, 
             'harga'       => $request->price,
             'kategori'    => $request->kategori,
         ]);
